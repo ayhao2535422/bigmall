@@ -17,7 +17,11 @@ export default {
       }
   },
   components: {},
-  methods: {},
+  methods: {
+    refresh() {
+      this.scroll.refresh()
+    }
+  },
   mounted () {
     this.scroll = new BScroll(this.$refs.wrapper, {
       click: true,

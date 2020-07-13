@@ -1,7 +1,7 @@
 <template>
   <div class="feature">
     <a href="http://www.baidu.com">
-      <img src="../../../assets/img/home/recommend_bg.jpg" alt="">
+      <img src="../../../assets/img/home/recommend_bg.jpg" alt="" @load="imgLoad">
     </a>
   </div>
 </template>
@@ -10,10 +10,19 @@
 export default {
   name: "",
   data() {
-      return {}
+      return {
+        isLoad: false
+      }
   },
   components: {},
-  methods: {}
+  methods: {
+    imgLoad() {
+      if(!this.isLoad) {
+        this.$emit('featureImgLoad')
+        this.isLoad = true
+      }
+    }
+  }
 }
 </script>
 

@@ -1,11 +1,13 @@
 <template>
   <div class="">
     <nav-bar class="nav-bar"><div slot="center">购物街</div></nav-bar>
+    <tab-control ref="tabControl1" @itemClick="itemClick" :tablist="tablist" 
+    class="tab-control" v-show="isTabFixed"></tab-control>
     <scroll ref="scroll" @pullingUp="pullingUp" @scroll="scroll" class="content">
-      <home-swiper class="swiper" :banners="banners"></home-swiper>
+      <home-swiper class="swiper" :banners="banners" @swiperImgLoad="swiperImgLoad"></home-swiper>
       <recommend-view :recommends="recommends"></recommend-view>
       <feature-view></feature-view>
-      <tab-control @itemClick="itemClick" :tablist="tablist"></tab-control>
+      <tab-control ref="tabControl2" @itemClick="itemClick" :tablist="tablist"></tab-control>
       <goods-list :goods="goods[currentType].list"></goods-list>
     </scroll>
     <back-top @click.native="backTopClick" ref="backTop"></back-top>
@@ -25,6 +27,8 @@ import FeatureView from './childcomponents/FeatureView'
 
 import {getHomeMultidata, getHomeGoods} from '../../network/home'
 
+import {debounce} from '../../urils/utils'
+
 export default {
   name: "",
   data() {
@@ -37,7 +41,10 @@ export default {
           new: {page: 0, list: []},
           sell: {page: 0, list: []},
         },
-        currentType: 'pop'
+        currentType: 'pop',
+        tabOffsetTop: null,
+        isTabFixed: false,
+        isShow: false,
       }
   },
   components: {
@@ -63,20 +70,28 @@ export default {
           this.currentType = 'sell'
           break
       }
+      this.$refs.tabControl1.currentIndex = index
+      this.$refs.tabControl2.currentIndex = index
       console.log(this.currentType)
     },
     scroll(position) {
       position.y >= -1000 ? this.$refs.backTop.isShow = false : this.$refs.backTop.isShow = true
-      // console.log(position);
+      position.y > -this.tabOffsetTop ? this.isTabFixed = false : this.isTabFixed = true
     },
     backTopClick() {
-      this.$refs.scroll.scroll.scrollTo(0, 0, 500)
+      this.$refs.scroll.scroll && this.$refs.scroll.scroll.scrollTo(0, 0, 500)
     },
     pullingUp() {
       this.getHomeGoods(this.currentType)
-      this.$refs.scroll.scroll.finishPullUp()
+      this.$refs.scroll.scroll && this.$refs.scroll.scroll.finishPullUp()
     },
-
+    // featureImgLoad() {
+      // return this.$refs.tabControl2.$el.offsetTop
+    // },
+    swiperImgLoad() {
+      console.log(this.$refs.tabControl2.$el.offsetTop);
+      this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop
+    },
     getHomeMultidata() {
       getHomeMultidata().then(result => {
         this.banners.push(...result.data.banner.list)
@@ -95,11 +110,12 @@ export default {
     this.getHomeGoods('pop')
     this.getHomeGoods('new')
     this.getHomeGoods('sell')
-
+  },
+  mounted () {
+    let refresh = debounce(this.$refs.scroll.refresh, 400)
     this.$bus.$on('imgLoad', () => {
-      console.log('----');
-      this.$refs.scroll.scroll.refresh()
-    })
+      refresh()
+    });
   },
 }
 </script>
@@ -108,11 +124,8 @@ export default {
 .nav-bar{
   background-color: rgb(230, 109, 133);
   color: aliceblue;
-  position: fixed;
+  position: relative;
   z-index: 10;
-}
-.swiper{
-  /* padding-top: 44px; */
 }
 .content{
   position: absolute;
@@ -120,5 +133,9 @@ export default {
   right: 0;
   top: 44px;
   bottom: 49px;
+}
+.tab-control{
+  position: relative;
+  z-index: 1;
 }
 </style>
