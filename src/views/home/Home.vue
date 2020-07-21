@@ -6,7 +6,7 @@
     <scroll ref="scroll" @pullingUp="pullingUp" @scroll="scroll" class="content">
       <home-swiper class="swiper" :banners="banners" @swiperImgLoad="swiperImgLoad"></home-swiper>
       <recommend-view :recommends="recommends"></recommend-view>
-      <feature-view></feature-view>
+      <feature-view @featureImgLoad="featureImgLoad"></feature-view>
       <tab-control ref="tabControl2" @itemClick="itemClick" :tablist="tablist"></tab-control>
       <goods-list :goods="goods[currentType].list"></goods-list>
     </scroll>
@@ -45,6 +45,8 @@ export default {
         tabOffsetTop: null,
         isTabFixed: false,
         isShow: false,
+        swiperIsLoad: false,
+        featureIsLoad: false
       }
   },
   components: {
@@ -85,12 +87,14 @@ export default {
       this.getHomeGoods(this.currentType)
       this.$refs.scroll.scroll && this.$refs.scroll.scroll.finishPullUp()
     },
-    // featureImgLoad() {
-      // return this.$refs.tabControl2.$el.offsetTop
-    // },
-    swiperImgLoad() {
-      console.log(this.$refs.tabControl2.$el.offsetTop);
-      this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop
+    featureImgLoad(isLoad) {
+      this.featureIsLoad = isLoad
+    },
+    swiperImgLoad(isLoad) {
+      this.swiperIsLoad = isLoad
+      if(this.featureIsLoad && this.swiperIsLoad){
+        this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop
+      }
     },
     getHomeMultidata() {
       getHomeMultidata().then(result => {
@@ -112,8 +116,8 @@ export default {
     this.getHomeGoods('sell')
   },
   mounted () {
-    let refresh = debounce(this.$refs.scroll.refresh, 400)
-    this.$bus.$on('imgLoad', () => {
+    let refresh = debounce(this.$refs.scroll.refresh, 200)
+    this.$bus.$on('homeImgLoad', () => {
       refresh()
     });
   },

@@ -1,101 +1,42 @@
 <template>
-  <div class="wrapper" ref="wrapper">
-    <ul class="content">
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>
-      <li>哈哈</li>d
-    </ul>
+  <div class="category">
+    <test title="分类" left="返回" right="查询"></test>
+    <div :style="isColor">category</div>
+    <div>哈哈</div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
 import BScroll from 'better-scroll'
+import Test from './Test'
 
 export default {
   name: "",
   data() {
       return {
-        scroll: null
+        isTrue: true,
+        isStyle: true
       }
   },
-  components: {},
+  components: {
+    Test
+  },
+  computed: {
+    isColor() {
+      return this.isStyle ? {fontSize: '80px'} : {}
+    }
+  },
   methods: {
   },
-  mounted () {
-    this.scroll = new BScroll(this.$refs.wrapper, {
-      click: true,
-      probeType: 0,
-      pullUpLoad: true
-    });
-    // this.scroll.on('scroll', position => console.log(position))
-    this.scroll.on('pullingUp', () => {
-      console.log('加载更多')
-      setTimeout(() => {
-        this.scroll.finishPullUp()
-      }, 2000);
-    })
-  },
+  mounted () {},
 }
 </script>
 
 <style scoped>
-.wrapper{
-  height: 500px;
-  background-color: burlywood;
+.active{
+  color: red;
+}
+.big{
+  font-size: 50px;
 }
 </style>

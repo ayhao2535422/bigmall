@@ -17,10 +17,8 @@ export default {
   components: {},
   methods: {
     imgLoad() {
-      if(!this.isLoad) {
-        this.$emit('featureImgLoad')
-        this.isLoad = true
-      }
+      this.isLoad = true
+      this.$emit('featureImgLoad', this.isLoad)
     }
   }
 }

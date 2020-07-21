@@ -35,11 +35,8 @@ export default {
   },
   methods: {
     imgLoad() {
-      if(!this.isLoad) {
-        this.$emit('swiperImgLoad')
-        this.isLoad = true
-      }
-      
+      this.isLoad = true
+      this.$emit('swiperImgLoad', this.isLoad)
     }
   }
 }

@@ -1,8 +1,9 @@
 <template>
   <div class="goods-list">
-    <div class="goods-list-item" v-for="(good, index) in goods" :key="index">
-      <a :href="good.link">
-        <div><img :src="good.show.img" @load="imgLoad" alt=""></div>
+    <div class="goods-list-item" v-for="(good, index) in goods" :key="index" @click="itemClick(good)">
+      <div>
+        <img :src="good.image || good.show.img" @load="imgLoad" alt="">
+      </div>
         <div class="info">
           <p>{{good.title}}</p>
           <div>
@@ -10,7 +11,6 @@
             <span class="cfav"><i class="iconfont icon-zan"></i>{{good.cfav}}</span>
           </div>
         </div>
-      </a>
     </div>
   </div>
 </template>
@@ -32,7 +32,14 @@ export default {
   components: {},
   methods: {
     imgLoad() {
-      this.$bus.$emit('imgLoad')
+      if(this.$route.path.indexOf('/home') !== -1){
+        this.$bus.$emit('homeImgLoad')
+      } else if(this.$route.path.indexOf('/detail') !== -1){
+        this.$bus.$emit('detailImgLoad')
+      }
+    },
+    itemClick(good) {
+      this.$router.push('/detail/' + good.iid)
     }
   }
 }

@@ -7,6 +7,7 @@ let Home = () => import('../views/home/Home.vue')
 let Category = () => import('../views/category/Category.vue')
 let Cart = () => import('../views/cart/Cart.vue')
 let Profile = () => import('../views/profile/Profile.vue')
+let Detail = () => import('../views/detail/Detail.vue')
 
 let routes = [
   {
@@ -28,6 +29,10 @@ let routes = [
   {
     path: '/profile',
     component: Profile
+  },
+  {
+    path: '/detail/:iid',
+    component: Detail
   }
 ]
 
